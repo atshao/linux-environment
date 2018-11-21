@@ -11,6 +11,7 @@
     && export GIT_PS1_SHOWUPSTREAM="auto" \
     && export GIT_PS1_SHOWCOLORHINTS="true"
 
+
 function __alex_ps1() {
     local c_normal='\[\e[0m\]'
     local c_user_root='\[\e[1;37;41m\]'

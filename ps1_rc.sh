@@ -4,6 +4,13 @@
 #   working-dir
 #   $
 #
+[ ! -z "$(type -t __git_ps1)" ] \
+    && export GIT_PS1_SHOWDIRTYSTATE="true" \
+    && export GIT_PS1_SHOWSTASHSTATE="true" \
+    && export GIT_PS1_SHOWUNTRACKEDFILES="true" \
+    && export GIT_PS1_SHOWUPSTREAM="auto" \
+    && export GIT_PS1_SHOWCOLORHINTS="true"
+
 function __alex_ps1() {
     local c_normal='\[\e[0m\]'
     local c_user_root='\[\e[1;37;41m\]'
@@ -33,7 +40,7 @@ function __alex_ps1() {
     fi
 
     local wd="${c_wd}"'$(pwd)'"${c_normal}"
-    printf '\n%s\n%s\n\$ ' "${info}" "${wd}"
+    printf -- '\n%s\n%s\n\$ ' "${info}" "${wd}"
 }
 
 # We don't want virtualenv's prompt!

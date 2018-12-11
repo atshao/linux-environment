@@ -62,6 +62,9 @@ function vvup() {
         vvdown
         export VENV_NAME="${1}"
         source "${DIR_VV}/${1}/bin/activate" > /dev/null 2>&1
+
+        pip | grep 'completion' >& /dev/null
+        [ $? -eq 0 ] && source <(pip completion --bash)
     else
         echo "ERROR: not existed: ${1}"
     fi

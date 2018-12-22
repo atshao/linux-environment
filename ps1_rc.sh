@@ -44,6 +44,7 @@ function __alex_ps1() {
     printf -- '\n%s\n%s\n\$ ' "${info}" "${wd}"
 }
 
+
 # We don't want virtualenv's prompt!
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 

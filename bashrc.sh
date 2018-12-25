@@ -16,9 +16,24 @@ MANPATH="$MANPATH:"
 export MANPATH
 
 ###############################################################################
+# projects, programming
 export DIR_PJ="$HOME/Workspace"
-export DIR_VV="$HOME/.$(whoami)/venv"
-[ ! -z $(which pipenv 2>/dev/null) ] && export WORKON_HOME=${DIR_VV}
+# virtual env
+[ $(which virtualenv 2> /dev/null) ] \
+    && export DIR_VV="$HOME/.$(whoami)/venv" \
+    || unset DIR_VV
+# pipenv
+[ $(which pipenv 2>/dev/null) ] \
+    && export WORKON_HOME="$HOME/.$(whoami)/venv" \
+    || unset WORKON_HOME
+# kubernetes
+[ $(which kubectl 2> /dev/null) ] \
+    && export K8S_INSTALLED=1 \
+    || unset K8S_INSTALLED
+# virtual box
+[ $(which VBoxManage 2> /dev/null) ] \
+    && export VBOX_INSTALLED=1 \
+    || unset VBOX_INSTALLED
 
 ###############################################################################
 if [ -d /usr/local/etc/profile.d ]; then

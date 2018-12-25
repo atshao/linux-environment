@@ -1,6 +1,6 @@
 # Custom personal PS1 like following
 #
-#   user@hostname venv:venv_name git:branch_name
+#   user@hostname venv:venv_info git:branch_name
 #   working-dir
 #   $
 #
@@ -19,7 +19,7 @@ function __alex_ps1() {
     local b_blue='\[\e[1;37;44m\]'
     local b_purple='\[\e[1;37;45m\]'
     local b_yellow='\[\e[0;30;43m\]'
-    local c_wd='\[\e[0;36m\]'
+    local c_where='\[\e[0;36m\]'
 
     local info=""
     if [ "$(id -un)" = "root" ]; then
@@ -28,20 +28,23 @@ function __alex_ps1() {
         info="${c_user_normal} \u@\h ${c_normal}"
     fi
 
-    if [ $(which kubectl 2> /dev/null) ]; then
-        local k8s='${K8S_PS1:+ k8s:$(kubectl config current-context) }'
-        info="${info}${b_yellow}${k8s}${c_normal}"
-    fi
+    local k8s='${K8S_PS1:+ k8s:$(kubectl config current-context) }'
+    info="${info}${b_yellow}${k8s}${c_normal}"
 
-    local venv_name='${VENV_NAME:+ venv:$(printenv VENV_NAME) }'
-    info="${info}${b_blue}${venv_name}${c_normal}"
+    local venv_info='${VENV_NAME:+ venv:$(printenv VENV_NAME) }'
+    info="${info}${b_blue}${venv_info}${c_normal}"
+
+    if [ -x "${PIP_PYTHON_PATH}" ]; then
+        local pipenv_info="$(${PIP_PYTHON_PATH} -V | cut -d' ' -f2)"
+        info="${info}${b_blue} pipenv:${pipenv_info} ${c_normal}"
+    fi
 
     if [ ! -z "$(type -t __git_ps1)" ]; then
         info="${info}${b_purple}"'$(__git_ps1 " git:%s ")'"${c_normal}"
     fi
 
-    local wd="${c_wd}"'$(pwd)'"${c_normal}"
-    printf -- '\n%s\n%s\n\$ ' "${info}" "${wd}"
+    local where="${c_where}"'$(pwd)'"${c_normal}"
+    printf -- '\n%s\n%s\n\$ ' "${info}" "${where}"
 }
 
 

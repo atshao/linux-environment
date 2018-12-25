@@ -1,4 +1,4 @@
-if [ $(which VBoxManage 2> /dev/null) ]; then
+if [ ${VBOX_INSTALLED} ]; then
     alias vmup='VBoxManage startvm'
     alias lsvm='VBoxManage list vms'
     alias lsvm-all='VBoxManage list vms'

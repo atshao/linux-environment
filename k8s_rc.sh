@@ -1,4 +1,4 @@
-if [ $(which kubectl 2> /dev/null) ]; then
+if [ ${K8S_INSTALLED} ]; then
     source <(kubectl completion bash)
     alias lsk8s='kubectl config get-contexts'
 

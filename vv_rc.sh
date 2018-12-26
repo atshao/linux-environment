@@ -2,7 +2,6 @@ if [ "x${DIR_VV}" != "x" ]; then
     [ ! -d "${DIR_VV}" ] && mkdir -p "${DIR_VV}"
 
     function lsvv() {
-        /usr/local/bin/gls -1 "${DIR_VV}"
         for vv in $(find "${DIR_VV}" -maxdepth 1 -type d | sort); do
             [ "${vv}" != "${DIR_VV}" ] && echo "$(basename "${vv}")"
         done

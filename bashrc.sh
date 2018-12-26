@@ -24,8 +24,8 @@ export DIR_PJ="$HOME/Workspace"
     || unset DIR_VV
 # pipenv
 [ $(which pipenv 2>/dev/null) ] \
-    && export WORKON_HOME="$HOME/.$(whoami)/venv" \
-    || unset WORKON_HOME
+    && export PIPENV_VENV_IN_PROJECT=1 \
+    || unset PIPENV_VENV_IN_PROJECT
 # kubernetes
 [ $(which kubectl 2> /dev/null) ] \
     && export K8S_INSTALLED=1 \

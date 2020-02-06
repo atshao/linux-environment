@@ -4,8 +4,10 @@
 ###############################################################################
 PATH="$HOME/.$(whoami)/bin"
 PATH="$PATH:/usr/local/opt/coreutils/libexec/gnubin"
+PATH="$PATH:/usr/local/opt/findutils/libexec/gnubin"
 PATH="$PATH:/usr/local/opt/curl/bin"
 PATH="$PATH:/usr/local/opt/file-formula/bin"
+PATH="$PATH:/usr/local/opt/node@8/bin"
 PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
 export PATH
 
@@ -18,6 +20,12 @@ export MANPATH
 ###############################################################################
 # projects, programming
 export DIR_PJ="$HOME/Workspace"
+# nvm (node)
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] \
+    && . "/usr/local/opt/nvm/nvm.sh"
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] \
+    && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
 # virtual env
 [ $(which virtualenv 2> /dev/null) ] \
     && export DIR_VV="$HOME/.$(whoami)/venv" \
@@ -54,6 +62,8 @@ fi
 unset ish
 
 ###############################################################################
+alias mongo='/usr/local/opt/mongodb@3.6/bin/mongod --config /usr/local/etc/mongod.conf'
+alias pgsql='/usr/local/opt/postgresql@9.6/bin/postgres -D /usr/local/var/postgresql@9.6'
 alias ls='/usr/local/bin/gls -F --color=auto --group-directories-first'
 alias la='/usr/local/bin/gls -aF --color=auto --group-directories-first'
 alias ll='/usr/local/bin/gls -lF --color=auto --group-directories-first'

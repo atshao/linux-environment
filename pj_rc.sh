@@ -37,7 +37,7 @@ if [ "x${DIR_PJ}" != "x" ]; then
         local cur
         COMPREPLY=()
 
-        cur="${COMP_WORDS[COMP_CWORD]}"
+        cur="${COMP_WORDS[$COMP_CWORD]}"
         case $COMP_CWORD in
         1)  # virtual env name
             pjs=$(find "${DIR_PJ}" -maxdepth 1 -mindepth 1\

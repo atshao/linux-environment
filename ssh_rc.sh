@@ -2,7 +2,7 @@ function _ssh() {
     local cur
     COMPREPLY=()
 
-    cur="${COMP_WORDS[COMP_CWORD]}"
+    cur="${COMP_WORDS[$COMP_CWORD]}"
     case $COMP_CWORD in
     1)  # Alias defined in $HOME/.ssh/config
         if [ -f $HOME/.ssh/config ]; then

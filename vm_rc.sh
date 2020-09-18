@@ -15,7 +15,7 @@ if [ ${VBOX_INSTALLED} ]; then
         local cur
         COMPREPLY=()
 
-        cur="${COMP_WORDS[COMP_CWORD]}"
+        cur="${COMP_WORDS[$COMP_CWORD]}"
         case $COMP_CWORD in
         1)  # available vms
             vms=$(VBoxManage list vms | cut -d'"' -f2)
@@ -27,7 +27,7 @@ if [ ${VBOX_INSTALLED} ]; then
         local cur
         COMPREPLY=()
 
-        cur="${COMP_WORDS[COMP_CWORD]}"
+        cur="${COMP_WORDS[$COMP_CWORD]}"
         case $COMP_CWORD in
         1)  # running vms
             vms=$(VBoxManage list runningvms | cut -d'"' -f2)

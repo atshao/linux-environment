@@ -20,7 +20,7 @@ if [ ${K8S_INSTALLED} ]; then
         local cur
         COMPREPLY=()
 
-        cur="${COMP_WORDS[COMP_CWORD]}"
+        cur="${COMP_WORDS[$COMP_CWORD]}"
         case $COMP_CWORD in
         1)  # k8s contexts
             ctx=$(kubectl config get-contexts --no-headers --output=name)

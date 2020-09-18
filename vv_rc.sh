@@ -66,7 +66,7 @@ if [ "x${DIR_VV}" != "x" ]; then
         local cur
         COMPREPLY=()
 
-        cur="${COMP_WORDS[COMP_CWORD]}"
+        cur="${COMP_WORDS[$COMP_CWORD]}"
         case $COMP_CWORD in
         1)  # virtual env name
             vvs=$(find "${DIR_VV}" -maxdepth 1 -mindepth 1\

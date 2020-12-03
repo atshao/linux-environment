@@ -1,20 +1,28 @@
 function _ssh() {
-    local cur
-    COMPREPLY=()
+    [ "${#COMP_WORDS[@]}" != "2" ] && return
+    [ ! -f ${HOME}/.ssh/config ] && return
 
-    cur="${COMP_WORDS[$COMP_CWORD]}"
-    case $COMP_CWORD in
-    1)  # Alias defined in $HOME/.ssh/config
-        if [ -f $HOME/.ssh/config ]; then
-            hosts=$(cat $HOME/.ssh/config \
-                 | grep -i '^Host' \
-                 | awk '{ print $2; }' \
-                 | grep -v '*')
-        else
-            hosts=
+    local IFS=$'\n'
+    local re_host='^ *Host +([^*]+) *$'
+    local re_user='^ *User +([^ ]+) *$'
+
+    local host="" user="" targets=""
+    for line in $(cat "${HOME}/.ssh/config"); do
+        if [[ "${line}" =~ $re_host ]]; then
+            host="${host}${BASH_REMATCH[1]}"
+        elif [[ "${line}" =~ $re_user ]]; then
+            user="${user}${BASH_REMATCH[1]}"
         fi
-        COMPREPLY=( $(compgen -W "${hosts}" -- ${cur}) )
-        ;;
-    esac
+
+        if [ "x${host}" != "x" -a "x${user}" != "x" ]; then
+            targets="${targets}" "${user}@${host}"
+            host=""
+            user=""
+        fi
+    done
+
+    echo "#targets=${#targets[@]}"
+    echo "targets=${targets[@]}"
+    COMPREPLY=($(compgen -W "${targets[@]}" -- "${COMP_WORDS[1]}"))
 }
 complete -F _ssh ssh

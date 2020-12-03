@@ -1,7 +1,17 @@
-if [ $(which VBoxManage 2> /dev/null) ]; then
+if [ $(which VBoxManage 2>/dev/null) ]; then
     alias vmup='VBoxManage startvm'
-    alias lsvm='VBoxManage list vms'
+    #alias lsvm='VBoxManage list vms'
 
+    function lsvm() {
+        if [ $# -gt 0 ]; then
+            echo "ERROR: argument provided"
+        else
+            local vm
+            for vm in $(VBoxManage list vms | cut -d'"' -f2); do
+                echo "--> ${vm}"
+            done
+        fi
+    }
     function vmdown() {
         if [ "x${1}" != "x" ]; then
             VBoxManage controlvm "${1}" poweroff

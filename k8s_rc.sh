@@ -1,10 +1,10 @@
-if [ ${K8S_INSTALLED} ]; then
+if [ $(which kubectl 2>/dev/null) ]; then
     source <(kubectl completion bash)
     alias lsk8s='kubectl config get-contexts'
 
     function k8s() {
         if [ "x${K8S_PS1}" = "x" ]; then
-            export K8S_PS1=1
+            export K8S_PS1=on
         else
             unset K8S_PS1
         fi

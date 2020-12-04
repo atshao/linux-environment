@@ -28,8 +28,10 @@ function __alex_ps1() {
         info="${c_user_normal} \u@\h ${c_normal}"
     fi
 
-    local k8s='${K8S_PS1:+ k8s:$(kubectl config current-context) }'
-    info="${info}${b_yellow}${k8s}${c_normal}"
+    if [ $(kubectl config current-context 2>/dev/null) ]; then
+        local k8s='${K8S_PS1:+ k8s:$(kubectl config current-context) }'
+        info="${info}${b_yellow}${k8s}${c_normal}"
+    fi
 
     local venv_info='${VENV_NAME:+ venv:$(printenv VENV_NAME) }'
     info="${info}${b_blue}${venv_info}${c_normal}"

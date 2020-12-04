@@ -1,3 +1,5 @@
+source "${HOME}/.alex/etc/env.sh"
+
 if [ "x${DIR_VV}" != "x" ]; then
     [ ! -d "${DIR_VV}" ] && mkdir -p "${DIR_VV}"
 

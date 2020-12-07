@@ -10,14 +10,13 @@ function _ssh() {
     for line in $(cat "${HOME}/.ssh/config"); do
         if [[ "${line}" =~ $re_host ]]; then
             host="${host}${BASH_REMATCH[1]}"
+            user=""  # reset user when new host section starts
         elif [[ "${line}" =~ $re_user ]]; then
             user="${user}${BASH_REMATCH[1]}"
         fi
 
         if [ "x${host}" != "x" -a "x${user}" != "x" ]; then
             targets="${targets}" "${user}@${host}"
-            host=""
-            user=""
         fi
     done
 

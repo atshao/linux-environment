@@ -1,12 +1,10 @@
-export DIR_PJ="${HOME}/Workspaces"
-
 if [ ! -d "${DIR_PJ}" ]; then
     mkdir -p "${DIR_PJ}"
 fi
 
 function lspj() {
     for pj in $(find "${DIR_PJ}" -maxdepth 1 -type d | sort); do
-        [ "${pj}" != "${DIR_PJ}" ] && echo "$(basename "${pj}")"
+        [ "${pj}" != "${DIR_PJ}" ] && basename "${pj}"
     done
 }
 function mkpj() {
@@ -24,14 +22,14 @@ function rmpj() {
     if [ "x${1}" = "x" ]; then
         echo "ERROR: no name specified."
     else
-        rm -rf "${DIR_PJ}/${1}"
+        rm -rf "${DIR_PJ:?}/${1}"
     fi
 }
 function cdpj() {
     local _dir
     [ "x${1}" = "x" ] && _dir="${DIR_PJ}" || _dir="${DIR_PJ}/${1}"
     if [ -d "${_dir}" ]; then
-        cd "${_dir}"
+        cd "${_dir}" || exit 1
     else
         echo "ERROR: not existed: ${1}"
     fi

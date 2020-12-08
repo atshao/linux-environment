@@ -34,7 +34,7 @@ fi
 ###############################################################################
 # Custom rc files.
 if [ -d "${HOME}/.alex/etc" ]; then
-    for ish in ${HOME}/.alex/etc/*_rc.sh; do
+    for ish in "${HOME}"/.alex/etc/*_rc.sh; do
         source "${ish}"
     done
 fi
@@ -53,7 +53,8 @@ alias ll='/usr/bin/ls -lF --color=auto --group-directories-first'
 alias lla='/usr/bin/ls -laF --color=auto --group-directories-first'
 
 # Custom PS1
-export PS1="$(__alex_ps1)"
+PS1="$(__alex_ps1)"
+export PS1
 
 # Custom umask
 umask 0002

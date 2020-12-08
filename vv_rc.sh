@@ -7,7 +7,7 @@ if [ "x${DIR_VV}" != "x" ]; then
         else
             local vvs
             vvs=$(find "${DIR_VV}" -maxdepth 1 -type d 2>/dev/null | sort)
-            for vv in "${vvs}"; do
+            for vv in ${vvs}; do
                 if [ "${vv}" != "${DIR_VV}" ]; then
                     echo "--> $(basename "${vv}")"
                 fi

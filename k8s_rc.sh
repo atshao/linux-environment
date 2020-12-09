@@ -25,18 +25,6 @@ if [ $(which kubectl 2>/dev/null) ]; then
         fi
     }
 
-    function k8s() {
-        if [ "${#}" -eq 0 ]; then
-            __alex_k8s__toggle_ps1
-        elif [ "${#}" -eq 1 ]; then
-            if [ "${1}" = "ls" -o "${1}" = "list" ]; then
-                __alex_k8s__list
-            elif [ "${1}" = "use" ]; then
-                __alex_k8s__use
-            fi
-        fi
-    }
-
     function __alex_k8s__completion() {
         if [ "${#COMP_WORDS[@]}" = 2 ]; then
             local sub_cmd=""
@@ -50,6 +38,18 @@ if [ $(which kubectl 2>/dev/null) ]; then
                   --output=name \
                   2>/dev/null)
             COMPREPLY=($(compgen -W "${ctx}" -- "${COMP_WORDS[2]}"))
+        fi
+    }
+
+    function k8s() {
+        if [ "${#}" -eq 0 ]; then
+            __alex_k8s__toggle_ps1
+        elif [ "${#}" -eq 1 ]; then
+            if [ "${1}" = "ls" -o "${1}" = "list" ]; then
+                __alex_k8s__list
+            elif [ "${1}" = "use" ]; then
+                __alex_k8s__use
+            fi
         fi
     }
 

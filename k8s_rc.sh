@@ -1,35 +1,59 @@
 if [ $(which kubectl 2>/dev/null) ]; then
-    source <(kubectl completion bash)
-    alias lsk8s='kubectl config get-contexts'
+    source <(kubectl completion bash 2>/dev/null)
 
-    function k8s() {
+    function __alex_k8s__list() {
+        if [ -n "$(kubectl config get-contexts -o name 2>/dev/null)" ]; then
+            for ctx in $(kubectl config get-contexts 2>/dev/null); do
+                echo "--> ${ctx}"
+            done
+        fi
+    }
+
+    function __alex_k8s__toggle_ps1() {
         if [ "x${K8S_PS1}" = "x" ]; then
-            export K8S_PS1=on
+            export K8S_PS1="on"
         else
             unset K8S_PS1
         fi
     }
-    function chk8s() {
+
+    function __alex_k8s__use() {
         if [ "x${1}" = "x" ]; then
             echo "ERROR: no context name specified."
         else
-            kubectl config use-context ${1}
+            kubectl config use-context "${1}"
         fi
     }
-    function _k8s() {
-        local cur
-        COMPREPLY=()
 
-        cur="${COMP_WORDS[$COMP_CWORD]}"
-        case $COMP_CWORD in
-        1)  # k8s contexts
-            ctx=$(kubectl config get-contexts --no-headers --output=name)
-            COMPREPLY=( $(compgen -W "${ctx}" -- ${cur}) )
-            ;;
-        esac
+    function k8s() {
+        if [ "${#}" -eq 0 ]; then
+            __alex_k8s__toggle_ps1
+        elif [ "${#}" -eq 1 ]; then
+            if [ "${1}" = "ls" -o "${1}" = "list" ]; then
+                __alex_k8s__list
+            elif [ "${1}" = "use" ]; then
+                __alex_k8s__use
+            fi
+        fi
     }
-    complete -F _k8s lsk8s
-    complete -F _k8s chk8s
+
+    function __alex_k8s__completion() {
+        if [ "${#COMP_WORDS[@]}" = 2 ]; then
+            local sub_cmd=""
+            sub_cmd="${sub_cmd}"$'\n'"use"
+            sub_cmd="${sub_cmd}"$'\n'"list"
+            COMPREPLY=($(compgen -W "${sub_cmd}" -- "${COMP_WORDS[1]}"))
+        elif [ "${#COMP_WORDS[@]}" = 3 -a "${COMP_WORDS[1]}" = "use" ]; then
+            local ctx
+            ctx=$(kubectl config get-contexts \
+                  --no-headers \
+                  --output=name \
+                  2>/dev/null)
+            COMPREPLY=($(compgen -W "${ctx}" -- "${COMP_WORDS[2]}"))
+        fi
+    }
+
+    complete -F __alex_k8s__completion k8s
 fi
 
 

@@ -1,63 +1,67 @@
-if [ $(which kubectl 2>/dev/null) ]; then
-    source <(kubectl completion bash 2>/dev/null)
+[ -n "$(which kubectl 2>/dev/null)" ] || return
 
-    function __alex_k8s__list() {
-        if [ -n "$(kubectl config get-contexts -o name 2>/dev/null)" ]; then
-            for ctx in $(kubectl config get-contexts 2>/dev/null); do
-                echo "--> ${ctx}"
-            done
+source <(kubectl completion bash 2>/dev/null)
+source <(helm completion bash 2>/dev/null)
+
+function __my_k8s__cmd__list_contexts() {
+    if [ -n "$(kubectl config get-contexts -o name 2>/dev/null)" ]; then
+        local ctx
+        for ctx in $(kubectl config get-contexts 2>/dev/null); do
+            echo "--> ${ctx}"
+        done
+    fi
+}
+
+function __my_k8s__cmd__toggle_ps1() {
+    if [ -z "${K8S_PS1}" ]; then
+        export K8S_PS1="on"
+    else
+        unset K8S_PS1
+    fi
+}
+
+function __my_k8s__cmd__use_context() {
+    if [ -z "${1}" ]; then
+        echo "error: no context name specified."
+    else
+        kubectl config use-context "${1}"
+    fi
+}
+
+function __my_k8s__query__contexts() {
+    local ctx
+    ctx=$(kubectl config get-contexts --no-headers --output=name 2>/dev/null)
+    COMPREPLY=($(compgen -W "${ctx}" -- "${COMP_WORDS[2]}"))
+}
+
+function __my_k8s__query__sub_commands() {
+    local sub_commands=()
+    sub_commands+=("ls")
+    sub_commands+=("list")
+    sub_commands+=("use")
+    COMPREPLY=($(compgen -W "${sub_commands[*]}" -- "${COMP_WORDS[1]}"))
+}
+
+function __my_k8s__completion() {
+    if [ "${#COMP_WORDS[@]}" = 2 ]; then
+        __my_k8s__query__sub_commands
+    elif [ "${#COMP_WORDS[@]}" = 3 ] && [ "${COMP_WORDS[1]}" = "use" ]; then
+        __my_k8s__query__contexts
+    fi
+}
+
+function k8s() {
+    if [ ${#} -eq 0 ]; then
+        __my_k8s__cmd__toggle_ps1
+    elif [ ${#} -eq 1 ]; then
+        if [ "${1}" = "ls" ] || [ "${1}" = "list" ]; then
+            __my_k8s__cmd__list_contexts
         fi
-    }
-
-    function __alex_k8s__toggle_ps1() {
-        if [ "x${K8S_PS1}" = "x" ]; then
-            export K8S_PS1="on"
-        else
-            unset K8S_PS1
+    elif [ ${#} -eq 2 ]; then
+        if [ "${1}" = "use" ]; then
+            __my_k8s__cmd__use_context "${2}"
         fi
-    }
+    fi
+}
 
-    function __alex_k8s__use() {
-        if [ "x${1}" = "x" ]; then
-            echo "ERROR: no context name specified."
-        else
-            kubectl config use-context "${1}"
-        fi
-    }
-
-    function __alex_k8s__completion() {
-        if [ "${#COMP_WORDS[@]}" = 2 ]; then
-            local sub_cmd=""
-            sub_cmd="${sub_cmd}"$'\n'"use"
-            sub_cmd="${sub_cmd}"$'\n'"list"
-            COMPREPLY=($(compgen -W "${sub_cmd}" -- "${COMP_WORDS[1]}"))
-        elif [ "${#COMP_WORDS[@]}" = 3 -a "${COMP_WORDS[1]}" = "use" ]; then
-            local ctx
-            ctx=$(kubectl config get-contexts \
-                  --no-headers \
-                  --output=name \
-                  2>/dev/null)
-            COMPREPLY=($(compgen -W "${ctx}" -- "${COMP_WORDS[2]}"))
-        fi
-    }
-
-    function k8s() {
-        if [ "${#}" -eq 0 ]; then
-            __alex_k8s__toggle_ps1
-        elif [ "${#}" -eq 1 ]; then
-            if [ "${1}" = "ls" -o "${1}" = "list" ]; then
-                __alex_k8s__list
-            elif [ "${1}" = "use" ]; then
-                __alex_k8s__use
-            fi
-        fi
-    }
-
-    complete -F __alex_k8s__completion k8s
-fi
-
-
-if [ $(which helm 2> /dev/null) ]; then
-    source <(helm completion bash)
-fi
-
+complete -F __my_k8s__completion k8s

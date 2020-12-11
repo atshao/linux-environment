@@ -4,7 +4,7 @@
 #   working-dir
 #   $
 #
-[ ! -z "$(type -t __git_ps1)" ] \
+[ -n "$(type -t __git_ps1)" ] \
     && export GIT_PS1_SHOWDIRTYSTATE="true" \
     && export GIT_PS1_SHOWSTASHSTATE="true" \
     && export GIT_PS1_SHOWUNTRACKEDFILES="true" \
@@ -12,7 +12,7 @@
     && export GIT_PS1_SHOWCOLORHINTS="true"
 
 
-function __alex_ps1() {
+function __my_ps1() {
     local c_normal='\[\e[0m\]'
     local c_user_root='\[\e[1;37;41m\]'
     local c_user_normal='\[\e[1;30;42m\]'

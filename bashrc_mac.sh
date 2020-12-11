@@ -1,4 +1,9 @@
 ###############################################################################
+# Environment must be overwritten or all relevant stuff will malfunction.
+###############################################################################
+export DIR_MY_ENV="${HOME}/.alex"
+
+###############################################################################
 # System defaults.
 ###############################################################################
 [ -f "/etc/bashrc" ] && source "/etc/bashrc"
@@ -28,7 +33,7 @@ export DIR_PJ="${HOME}/Workspaces"
 export NVM_DIR="${HOME}/.nvm"
 
 # virtual env
-export DIR_VV="${HOME}/.alex/venv"
+export DIR_VENV="${DIR_MY_ENV}/venv"
 
 ###############################################################################
 # NVM/Node behaviors.
@@ -47,8 +52,8 @@ fi
 # Load our own resources.
 ###############################################################################
 # Custom rc files.
-if [ -d "${HOME}"/.alex/etc ]; then
-    for ish in "${HOME}"/.alex/etc/*_rc.sh; do
+if [ -d "${DIR_MY_ENV}/etc" ]; then
+    for ish in "${DIR_MY_ENV}"/etc/*_rc.sh; do
         source "${ish}"
     done
 fi
@@ -60,7 +65,7 @@ PATH="/usr/local/opt/findutils/libexec/gnubin:${PATH}"
 PATH="/usr/local/opt/curl/bin:${PATH}"
 PATH="/usr/local/opt/file-formula/bin:${PATH}"
 PATH="/usr/local/opt/node@8/bin:${PATH}"
-PATH="${HOME}/.alex/bin:${PATH}"
+PATH="${DIR_MY_ENV}/bin:${PATH}"
 export PATH
 
 # Custom MANPATH
@@ -79,7 +84,7 @@ alias vi='/usr/local/bin/vim'
 alias r='fc -s'
 
 # Custom PS1
-PS1="$(__alex_ps1)"
+PS1="$(__my_ps1)"
 export PS1
 
 # Custom umask

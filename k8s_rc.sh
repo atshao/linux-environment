@@ -3,7 +3,7 @@
 source <(kubectl completion bash 2>/dev/null)
 source <(helm completion bash 2>/dev/null)
 
-function __my_k8s__cmd__list_contexts() {
+function __my_k8s__cmd__list() {
     if [ -n "$(kubectl config get-contexts -o name 2>/dev/null)" ]; then
         kubectl config get-contexts
     fi
@@ -17,7 +17,7 @@ function __my_k8s__cmd__toggle_ps1() {
     fi
 }
 
-function __my_k8s__cmd__use_context() {
+function __my_k8s__cmd__use() {
     if [ -z "${1}" ]; then
         echo "error: no context name specified."
     else
@@ -40,10 +40,12 @@ function __my_k8s__query__sub_commands() {
 }
 
 function __my_k8s__completion() {
-    if [ "${#COMP_WORDS[@]}" = 2 ]; then
+    if [ ${#COMP_WORDS[@]} -eq 2 ]; then
         __my_k8s__query__sub_commands
-    elif [ "${#COMP_WORDS[@]}" = 3 ] && [ "${COMP_WORDS[1]}" = "use" ]; then
-        __my_k8s__query__contexts
+    elif [ ${#COMP_WORDS[@]} -eq 3 ]; then
+        if [ "${COMP_WORDS[1]}" = "use" ]; then
+            __my_k8s__query__contexts
+        fi
     fi
 }
 
@@ -52,11 +54,11 @@ function k8s() {
         __my_k8s__cmd__toggle_ps1
     elif [ ${#} -eq 1 ]; then
         if [ "${1}" = "ls" ] || [ "${1}" = "list" ]; then
-            __my_k8s__cmd__list_contexts
+            __my_k8s__cmd__list
         fi
     elif [ ${#} -eq 2 ]; then
         if [ "${1}" = "use" ]; then
-            __my_k8s__cmd__use_context "${2}"
+            __my_k8s__cmd__use "${2}"
         fi
     fi
 }

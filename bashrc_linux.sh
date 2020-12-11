@@ -1,4 +1,9 @@
 ###############################################################################
+# Environment must be overwritten or all relevant stuff will malfunction.
+###############################################################################
+export DIR_MY_ENV="${HOME}/.alex"
+
+###############################################################################
 # System defaults.
 ###############################################################################
 [ -f "/etc/bashrc" ] && source "/etc/bashrc"
@@ -14,7 +19,7 @@ export DIR_PJ="${HOME}/Workspaces"
 export DIR_NVM="${HOME}/.nvm"
 
 # virtual env
-export DIR_VV="${HOME}/.alex/venv"
+export DIR_VENV="${DIR_MY_ENV}/venv"
 
 ###############################################################################
 # NVM/Node behaviors.
@@ -33,8 +38,8 @@ fi
 # Load our own resources.
 ###############################################################################
 # Custom rc files.
-if [ -d "${HOME}/.alex/etc" ]; then
-    for ish in "${HOME}"/.alex/etc/*_rc.sh; do
+if [ -d "${DIR_MY_ENV}/etc" ]; then
+    for ish in "${DIR_MY_ENV}"/etc/*_rc.sh; do
         source "${ish}"
     done
 fi
@@ -42,7 +47,7 @@ unset ish
 
 # Custom PATH
 PATH="${HOME}/.local/bin:${PATH}"
-PATH="${HOME}/.alex/bin:${PATH}"
+PATH="${DIR_MY_ENV}/bin:${PATH}"
 export PATH
 
 # Custom aliases
@@ -51,13 +56,14 @@ alias ls='/usr/bin/ls -F --color=auto --group-directories-first'
 alias la='/usr/bin/ls -aF --color=auto --group-directories-first'
 alias ll='/usr/bin/ls -lF --color=auto --group-directories-first'
 alias lla='/usr/bin/ls -laF --color=auto --group-directories-first'
+[ -n "$(which podman 2>/dev/null)" ] && alias docker='podman'
 
 # Custom PS1
-PS1="$(__alex_ps1)"
+PS1="$(__my_ps1)"
 export PS1
 
 # Custom umask
-umask 0002
+umask 0077
 
 # Custom editor mode
 set -o vi

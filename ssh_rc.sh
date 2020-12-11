@@ -1,13 +1,14 @@
-function _ssh() {
-    [ "${#COMP_WORDS[@]}" != "2" ] && return
-    [ ! -f "${HOME}/.ssh/config" ] && return
+[ -n "$(which ssh 2>/dev/null)" ] || return
+
+function __my_ssh__completion() {
+    [ -f "${HOME}/.ssh/config" ] || return
+    [ ${#COMP_WORDS[@]} -eq 2 ] || return
 
     local re_host='^ *Host +([^*]+) *$'
     local re_user='^ *User +([^ ]+) *$'
 
-    IFS=$'\n'
-    local line host="" user="" targets=""
-    for line in $(cat "${HOME}/.ssh/config"); do
+    local line host="" user="" targets=()
+    while IFS= read -r line; do
         if [[ "${line}" =~ $re_host ]]; then
             host="${host}${BASH_REMATCH[1]}"
             user=""  # reset user when new host section starts
@@ -15,11 +16,12 @@ function _ssh() {
             user="${user}${BASH_REMATCH[1]}"
         fi
 
-        if [ "x${host}" != "x" -a "x${user}" != "x" ]; then
-            targets="${targets}"$'\n'"${user}@${host}"
+        if [ -n "${host}" ] && [ -n "${user}" ]; then
+            targets+=("${user}@${host}")
         fi
-    done
+    done < <(cat "${HOME}/.ssh/config")
 
-    COMPREPLY=($(compgen -W "${targets[@]}" -- "${COMP_WORDS[1]}"))
+    COMPREPLY=($(compgen -W "${targets[*]}" -- "${COMP_WORDS[1]}"))
 }
-complete -F _ssh ssh
+
+complete -F __my_ssh__completion ssh

@@ -5,10 +5,7 @@ source <(helm completion bash 2>/dev/null)
 
 function __my_k8s__cmd__list_contexts() {
     if [ -n "$(kubectl config get-contexts -o name 2>/dev/null)" ]; then
-        local ctx
-        for ctx in $(kubectl config get-contexts 2>/dev/null); do
-            echo "--> ${ctx}"
-        done
+        kubectl config get-contexts
     fi
 }
 

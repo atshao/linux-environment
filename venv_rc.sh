@@ -2,62 +2,24 @@
 [ -n "${DIR_VENV}" ] || return
 [ -d "${DIR_VENV}" ] || mkdir -p "${DIR_VENV}" || return
 
-    function mkvv() {
-        local version
-        version=$(python -V 2>/dev/null | cut -d' ' -f2 | cut -d'.' -f1)
-        if [ "${version}" = "2" ]; then
-            mkvv2 "$@"
-        elif [ "${version}" = "3" ]; then
-            mkvv3 "$@"
-        else
-            echo "error: cannot determine default Python version"
-        fi
-    }
-    function mkvv2() {
-        if [ -z "${1}" ]; then
-            echo "error: no name specified."
-        else
-            if [ -d "${DIR_VENV}/${1}" ]; then
-                echo "error: already existed: ${1}"
-            else
-                (cd "${DIR_VENV}" && virtualenv --python=python2 "${1}")
-            fi
-        fi
-    }
-    function mkvv3() {
-        if [ -z "${1}" ]; then
-            echo "error: no name specified."
-        else
-            if [ -d "${DIR_VENV}/${1}" ]; then
-                echo "error: already existed: ${1}"
-            else
-                (cd "${DIR_VENV}" && virtualenv --python=python3 "${1}")
-            fi
-        fi
-    }
-    function _vv() {
-        [ "${#COMP_WORDS[@]}" != "2" ] && return
-        [ "${COMP_WORDS[0]}" == "lsvv" ] && return
-        [ "${COMP_WORDS[0]}" == "mkvv" ] && return
-        [ "${COMP_WORDS[0]}" == "mkvv2" ] && return
-        [ "${COMP_WORDS[0]}" == "mkvv3" ] && return
-        [ "${COMP_WORDS[0]}" == "vvdown" ] && return
-
-        local vvs
-        if [ "${COMP_WORDS[0]}" == "mkvv" ]; then
-            COMPREPLY=("--python=")
-        else
-            vvs=$(find "${DIR_VENV}" \
-                  -maxdepth 1 -mindepth 1\
-                  -type d -exec basename {} \; \
-                  2>/dev/null \
-                  | sort -u)
-            COMPREPLY=($(compgen -W "${vvs}" -- "${COMP_WORDS[1]}"))
-        fi
-    }
-
 function __my_venv__cmd__add() {
-    echo "add:" "${@}"
+    local name="${1}" py_path="${2}"
+
+    if [ -z "${name}" ]; then
+        echo "error: no venv name specified."
+        return
+    fi
+
+    if [ -d "${DIR_VENV:?}/${name}" ]; then
+        echo "error: already existed: ${name}"
+        return
+    fi
+
+    if [ -z "${py_path}" ]; then
+        virtualenv "${DIR_VENV}/${name}"
+    else
+        virtualenv --python="${py_path}" "${DIR_VENV}/${name}"
+    fi
 }
 
 function __my_venv__cmd__remove() {
@@ -100,10 +62,14 @@ function __my_venv__cmd__go() {
     local where
     [ -z "${1}" ] && where="${DIR_VENV:?}" || where="${DIR_VENV:?}/${1}"
     if [ -d "${where}" ]; then
-        cd "${where}"
+        cd "${where}" || return
     else
         echo "error: not existed: ${1}"
     fi
+}
+
+function __my_venv__query__paths() {
+    COMPREPLY=($(compgen -o default -f -- "${COMP_WORDS[3]}"))
 }
 
 function __my_venv__query__venvs() {
@@ -140,6 +106,10 @@ function __my_venv__completion() {
         elif [ "${COMP_WORDS[1]}" = "go" ]; then
             __my_venv__query__venvs
         fi
+    elif [ ${#COMP_WORDS[@]} -eq 4 ]; then
+        if [ "${COMP_WORDS[1]}" = "add" ]; then
+            __my_venv__query__paths
+        fi
     fi
 }
 
@@ -152,13 +122,17 @@ function venv() {
         fi
     elif [ ${#} -eq 2 ]; then
         if [ "${1}" = "add" ]; then
-            shift; __my_venv__cmd__add "${@}"
+            __my_venv__cmd__add "${2}"
         elif [ "${1}" = "remove" ]; then
             __my_venv__cmd__remove "${2}"
         elif [ "${1}" = "mount" ]; then
             __my_venv__cmd__mount "${2}"
         elif [ "${1}" = "go" ]; then
             __my_venv__cmd__go "${2}"
+        fi
+    elif [ ${#} -eq 3 ]; then
+        if [ "${1}" = "add" ]; then
+            __my_venv__cmd__add "${2}" "${3}"
         fi
     fi
 }

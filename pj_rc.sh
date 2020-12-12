@@ -7,7 +7,7 @@ function __my_pj__cmd__add() {
         if [ -d "${DIR_PJ:?}/${1}" ]; then
             echo "error: already existed: ${1}"
         else
-            (cd "${DIR_PJ}" && mkdir "${1}") && cd "${DIR_PJ}/${1}"
+            (cd "${DIR_PJ}" && mkdir "${1}") && cd "${DIR_PJ}/${1}" || return
         fi
     fi
 }
@@ -24,7 +24,7 @@ function __my_pj__cmd__go() {
     local where
     [ -z "${1}" ] && where="${DIR_PJ:?}" || where="${DIR_PJ:?}/${1}"
     if [ -d "${where}" ]; then
-        cd "${where}"
+        cd "${where}" || return
     else
         echo "error: not existed: ${1}"
     fi

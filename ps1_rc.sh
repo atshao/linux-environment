@@ -13,6 +13,8 @@
 
 
 function __my_ps1() {
+    local info=""
+
     local c_normal='\[\e[0m\]'
     local c_user_root='\[\e[1;37;41m\]'
     local c_user_normal='\[\e[1;30;42m\]'
@@ -21,24 +23,18 @@ function __my_ps1() {
     local b_yellow='\[\e[0;30;43m\]'
     local c_where='\[\e[0;36m\]'
 
-    local info=""
-    if [ "$(id -un)" = "root" ]; then
-        info="${c_user_root} \u@\h ${c_normal}"
-    else
-        info="${c_user_normal} \u@\h ${c_normal}"
-    fi
+    [ "$(id -un)" = "root" ] \
+        && info="${c_user_root} \u@\h ${c_normal}" \
+        || info="${c_user_normal} \u@\h ${c_normal}"
 
-    if [ $(kubectl config current-context 2>/dev/null) ]; then
-        local k8s='${K8S_PS1:+ k8s:$(kubectl config current-context) }'
-        info="${info}${b_yellow}${k8s}${c_normal}"
-    fi
+    local k8s='${K8S_PS1:+ k8s:$(kubectl config current-context 2>/dev/null) }'
+    info="${info}${b_yellow}${k8s}${c_normal}"
 
     local venv_info='${VENV_NAME:+ venv:$(printenv VENV_NAME) }'
     info="${info}${b_blue}${venv_info}${c_normal}"
 
-    if [ ! -z "$(type -t __git_ps1)" ]; then
-        info="${info}${b_purple}"'$(__git_ps1 " git:%s ")'"${c_normal}"
-    fi
+    [ -n "$(type -t __git_ps1)" ] \
+        && info="${info}${b_purple}"'$(__git_ps1 " git:%s ")'"${c_normal}"
 
     local where="${c_where}"'$(pwd)'"${c_normal}"
     printf -- '\n%s\n%s\n\$ ' "${info}" "${where}"

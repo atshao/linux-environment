@@ -1,25 +1,20 @@
 ###############################################################################
-# Environment must be overwritten or all relevant stuff will malfunction.
+# Environment variables regarding paths must be overwritten
+# or all relevant stuff will malfunction.
 ###############################################################################
 export DIR_MY_ENV="${HOME}/.alex"
+# projects
+export DIR_PJ="${HOME}/Workspaces"
+# nvm (node)
+export DIR_NVM="${HOME}/.nvm"
+# virtual env
+export DIR_VENV="${DIR_MY_ENV}/venv"
 
 ###############################################################################
 # System defaults.
 ###############################################################################
 [ -f "/etc/bashrc" ] && source "/etc/bashrc"
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
-
-###############################################################################
-# Custom environment variables regarding paths.
-###############################################################################
-# projects
-export DIR_PJ="${HOME}/Workspaces"
-
-# nvm (node)
-export DIR_NVM="${HOME}/.nvm"
-
-# virtual env
-export DIR_VENV="${DIR_MY_ENV}/venv"
 
 ###############################################################################
 # NVM/Node behaviors.

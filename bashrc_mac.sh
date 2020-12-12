@@ -1,7 +1,14 @@
 ###############################################################################
-# Environment must be overwritten or all relevant stuff will malfunction.
+# Environment variables regarding paths must be overwritten
+# or all relevant stuff will malfunction.
 ###############################################################################
 export DIR_MY_ENV="${HOME}/.alex"
+# projects
+export DIR_PJ="${HOME}/Workspaces"
+# nvm (node)
+export NVM_DIR="${HOME}/.nvm"
+# virtual env
+export DIR_VENV="${DIR_MY_ENV}/venv"
 
 ###############################################################################
 # System defaults.
@@ -22,18 +29,6 @@ if [ -d /usr/local/etc/bash_completion.d ]; then
         source "${ish}"
     done
 fi
-
-###############################################################################
-# Custom environment variables regarding paths.
-###############################################################################
-# projects
-export DIR_PJ="${HOME}/Workspaces"
-
-# nvm (node)
-export NVM_DIR="${HOME}/.nvm"
-
-# virtual env
-export DIR_VENV="${DIR_MY_ENV}/venv"
 
 ###############################################################################
 # NVM/Node behaviors.

@@ -58,7 +58,9 @@ PS1="$(__my_ps1)"
 export PS1
 
 # Custom umask
-umask 0077
+[ "$(id -un)" = "root" ] \
+    && umask 0022 \
+    || umask 0077
 
 # Custom editor mode
 set -o vi

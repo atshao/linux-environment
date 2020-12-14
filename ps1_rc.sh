@@ -4,7 +4,7 @@
 #   working-dir
 #   $
 #
-[ -n "$(type -t __git_ps1)" ] \
+[ -n "$(type -t __git_ps1 2>/dev/null)" ] \
     && export GIT_PS1_SHOWDIRTYSTATE="true" \
     && export GIT_PS1_SHOWSTASHSTATE="true" \
     && export GIT_PS1_SHOWUNTRACKEDFILES="true" \
@@ -33,7 +33,7 @@ function __my_ps1() {
     local venv_info='${VENV_NAME:+ venv:$(printenv VENV_NAME) }'
     info="${info}${b_blue}${venv_info}${c_normal}"
 
-    [ -n "$(type -t __git_ps1)" ] \
+    [ -n "$(type -t __git_ps1 2>/dev/null)" ] \
         && info="${info}${b_purple}"'$(__git_ps1 " git:%s ")'"${c_normal}"
 
     local where="${c_where}"'$(pwd)'"${c_normal}"

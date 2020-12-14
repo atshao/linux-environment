@@ -119,6 +119,8 @@ function venv() {
             __my_venv__cmd__list
         elif [ "${1}" = "unmount" ]; then
             __my_venv__cmd__unmount
+        elif [ "${1}" = "go" ]; then
+            __my_venv__cmd__go
         fi
     elif [ ${#} -eq 2 ]; then
         if [ "${1}" = "add" ]; then

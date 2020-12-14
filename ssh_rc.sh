@@ -7,13 +7,13 @@ function __my_ssh__completion() {
     local re_host='^ *Host +([^*]+) *$'
     local re_user='^ *User +([^ ]+) *$'
 
-    local line host="" user="" targets=()
+    local line host user targets=()
     while IFS= read -r line; do
         if [[ "${line}" =~ $re_host ]]; then
-            host="${host}${BASH_REMATCH[1]}"
+            host="${BASH_REMATCH[1]}"
             user=""  # reset user when new host section starts
         elif [[ "${line}" =~ $re_user ]]; then
-            user="${user}${BASH_REMATCH[1]}"
+            user="${BASH_REMATCH[1]}"
         fi
 
         if [ -n "${host}" ] && [ -n "${user}" ]; then

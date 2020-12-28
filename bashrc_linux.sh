@@ -14,7 +14,7 @@ export DIR_VENV="${DIR_MY_ENV}/venv"
 # System defaults.
 ###############################################################################
 [ -f "/etc/bashrc" ] && source "/etc/bashrc"
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 ###############################################################################
 # NVM/Node behaviors.
@@ -64,3 +64,6 @@ export PS1
 
 # Custom editor mode
 set -o vi
+
+export EDITOR=vi
+

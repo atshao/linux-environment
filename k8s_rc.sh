@@ -1,7 +1,9 @@
 [ -n "$(which kubectl 2>/dev/null)" ] || return
 
-source <(kubectl completion bash 2>/dev/null)
-source <(helm completion bash 2>/dev/null)
+[ -n "$(which kubectl 2>/dev/null)" ] \
+    && source <(kubectl completion bash 2>/dev/null)
+[ -n "$(which helm 2>/dev/null)" ] \
+    && source <(helm completion bash 2>/dev/null)
 
 function __my_k8s__cmd__list() {
     if [ -n "$(kubectl config get-contexts -o name 2>/dev/null)" ]; then

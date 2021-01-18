@@ -57,13 +57,8 @@ alias lla='/usr/bin/ls -laF --color=auto --group-directories-first'
 PS1="$(__my_ps1)"
 export PS1
 
-# Custom umask
-[ "$(id -un)" = "root" ] \
-    && umask 0022 \
-    || umask 0077
-
-# Custom editor mode
-set -o vi
-
+# Others custom
 export EDITOR=vi
+umask 0022
+set -o vi
 

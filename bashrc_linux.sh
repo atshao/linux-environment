@@ -51,7 +51,6 @@ alias ls='/usr/bin/ls -F --color=auto --group-directories-first'
 alias la='/usr/bin/ls -aF --color=auto --group-directories-first'
 alias ll='/usr/bin/ls -lF --color=auto --group-directories-first'
 alias lla='/usr/bin/ls -laF --color=auto --group-directories-first'
-[ -n "$(which podman 2>/dev/null)" ] && alias docker='podman'
 
 # Custom PS1
 PS1="$(__my_ps1)"

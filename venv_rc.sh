@@ -44,7 +44,7 @@ function __my_venv__cmd__mount() {
     fi
 
     if [ -f "${DIR_VENV:?}/${1}/bin/activate" ]; then
-        __my_venv__cmd__unmount
+        __my_venv__cmd__umount
         export VENV_NAME="${1}"
         source "${DIR_VENV}/${1}/bin/activate" 2>/dev/null
         source <(pip completion --bash 2>/dev/null)
@@ -53,7 +53,7 @@ function __my_venv__cmd__mount() {
     fi
 }
 
-function __my_venv__cmd__unmount() {
+function __my_venv__cmd__umount() {
     unset VENV_NAME
     deactivate > /dev/null 2>&1
 }
@@ -90,7 +90,7 @@ function __my_venv__query_sub_commands() {
     sub_commands+=("ls")
     sub_commands+=("list")
     sub_commands+=("mount")
-    sub_commands+=("unmount")
+    sub_commands+=("umount")
     sub_commands+=("go")
     COMPREPLY=($(compgen -W "${sub_commands[*]}" -- "${COMP_WORDS[1]}"))
 }
@@ -117,8 +117,8 @@ function venv() {
     if [ ${#} -eq 1 ]; then
         if [ "${1}" = "ls" ] || [ "${1}" = "list" ]; then
             __my_venv__cmd__list
-        elif [ "${1}" = "unmount" ]; then
-            __my_venv__cmd__unmount
+        elif [ "${1}" = "umount" ]; then
+            __my_venv__cmd__umount
         elif [ "${1}" = "go" ]; then
             __my_venv__cmd__go
         fi

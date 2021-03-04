@@ -4,20 +4,10 @@ function __my_ssh__completion() {
     [ -f "${HOME}/.ssh/config" ] || return
     [ ${#COMP_WORDS[@]} -eq 2 ] || return
 
-    local re_host='^ *Host +([^*]+) *$'
-    local re_user='^ *User +([^ ]+) *$'
-
-    local line host user targets=()
+    local line targets=() re_host='^ *Host +([^*]+) *$'
     while IFS= read -r line; do
         if [[ "${line}" =~ $re_host ]]; then
-            host="${BASH_REMATCH[1]}"
-            user=""  # reset user when new host section starts
-        elif [[ "${line}" =~ $re_user ]]; then
-            user="${BASH_REMATCH[1]}"
-        fi
-
-        if [ -n "${host}" ] && [ -n "${user}" ]; then
-            targets+=("${user}@${host}")
+            targets+=("${BASH_REMATCH[1]}")
         fi
     done < <(cat "${HOME}/.ssh/config")
 
